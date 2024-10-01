@@ -1,60 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import DonationDetails from '../components/DonationDetails';
 
 // Styled components
 const Main = styled.main`
-  .post-box {
-    padding: 1.2rem;
-  }
-
-  .post-img {
-    margin-top: 7rem;
-    width: 100%;
-    height: auto;
-  }
-
-  .post-title {
-    // font-family: 'Pretendard-Bold';
-    margin-bottom: 0.3rem;
-  }
-
-  .fund-recipient {
-    font-size: 0.7rem;
-    margin-bottom: 0;
-  }
-
-  .progress-container {
-    width: 100%;
-    background-color: #ECECEC;
-    border-radius: 25px;
-    height: 0.7rem;
-    margin-top: 1.5rem;
-    position: relative;
-  }
-
-  .progress-bar {
-    height: 100%;
-    background-color: #FFCC00;
-    border-radius: 25px;
-    transition: width 0.5s ease;
-  }
-
-  .progress-text {
-    font-size: 0.8rem;
-    font-family: 'Pretendard-SemiBold';
-    color: #FFCC00;
-    margin: 0.22rem 0 0 0.3rem;
-  }
-
-  .target-text {
-    font-size: 0.8rem;
-    color: #333;
-    float: right;
-    margin-right: 0.3rem;
-    margin-top: -0.8rem;
-  }
 
   .fund-btn {
     height: 2rem;
@@ -68,6 +18,7 @@ const Main = styled.main`
     color: #fff;
     // font-family: 'Pretendard-SemiBold';
     font-size: 1.2rem;
+    cursor: pointer;
   }
 
   .separator {

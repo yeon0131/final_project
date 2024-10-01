@@ -12,9 +12,10 @@ import DisasterMentalHealthManual from './pages/DisasterMentalHealthManual';
 import DMHMDefinition from './pages/DMHMDefinition';
 import DMHMDefinition2 from './pages/DMHMDefinition2';
 import DisasterGuide from './pages/DisasterGuide';
-import DisasterSafetyStore from './pages/DisasterSafetyStore';
+import Fund from './pages/Fund';
 import FundDetail from './pages/FundDetail';
 import FundPayment from './pages/FundPayment';
+import FundPaymentSystem from './pages/FundPaymentSystem';
 import HospitalShelterInfo from './pages/HospitalShelterInfo';
 import HumanCounseling from './pages/HumanCounseling';
 import AICounseling from './pages/AICounseling';
@@ -45,9 +46,10 @@ function App() {
           <Route path="DMHMDefinition" element={<DMHMDefinition/>} />
           <Route path="DMHMDefinition2" element={<DMHMDefinition2/>} />
           <Route path="disaster-guide" element={<DisasterGuide />} />
-          <Route path="disaster-safety-store" element={<DisasterSafetyStore />} />
+          <Route path="fund" element={<Fund />} />
           <Route path="fund-detail" element={<FundDetail />} />
           <Route path="fund-payment" element={<FundPayment />} />
+          <Route path="fund-payment-system" element={<FundPaymentSystem />} />
           <Route path="hospital-shelter-info" element={<HospitalShelterInfo />} />
           <Route path="/new-consultation" element={<NewConsultation />} />
           <Route path="/existing-consultation" element={<ExistingConsultation />} />

@@ -67,7 +67,7 @@ const FundCard = ({ imageSrc, altText, title, date, link }) => {
   );
 };
 
-const DisasterSafetyStore = () => {
+const Fund = () => {
   return (
     <Main>
       <FundCard
@@ -95,4 +95,4 @@ const DisasterSafetyStore = () => {
   );
 };
 
-export default DisasterSafetyStore;
+export default Fund;
