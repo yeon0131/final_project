@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Styled components
@@ -99,6 +99,14 @@ const FundCard = ({ imageSrc, altText, title, date, link }) => {
 };
 
 const Fund = () => {
+  const location = useLocation();
+  const [posts, setPosts] = useState([]);
+
+  // location.state로 전달된 postData가 있으면 배열에 추가
+  if (location.state && location.state.postData) {
+    setPosts((prevPosts) => [...prevPosts, location.state.postData]);
+  }
+
   return (
     <Main>
       <FundCard
@@ -122,6 +130,18 @@ const Fund = () => {
         date="2024.7.16 ~ 2024.8.16"
         link="/fund-detail"
       />
+
+      {posts.map((post, index) => (
+        <Link to={`/fund-detail/${index}`} key={index}>
+          <div className="card">
+            <img src="../svg/store-card1.svg" className="card-img" alt="모금 이미지" />
+            <div className="card-body">
+              <p className="card-text">{post.title}</p>
+              <p className="card-date">{post.fundPeriod}</p>
+            </div>
+          </div>
+        </Link>
+      ))}
 
       <div className="write-button-container">
         <Link to="/fund-post" className="write-button">글 작성하기</Link>

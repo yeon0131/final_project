@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Editor } from '@tinymce/tinymce-react'; // TinyMCE 에디터 사용
+import '@toast-ui/editor/dist/toastui-editor.css'; // 토스트 UI 에디터의 CSS
+import { Editor } from '@toast-ui/react-editor';
 
 // Styled components
 const Main = styled.main`
@@ -44,32 +45,39 @@ const Main = styled.main`
 
 const FundPost = () => {
     const navigate = useNavigate();
-
-    // 상태 관리
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState(''); // 에디터에 입력된 내용
     const [team, setTeam] = useState('');
     const [fundPeriod, setFundPeriod] = useState('');
     const [businessPeriod, setBusinessPeriod] = useState('');
     const [targetAmount, setTargetAmount] = useState('');
+    const editorRef = useRef(); // 에디터의 참조를 만듭니다.
 
     // 폼 제출 처리
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // 에디터에서 작성된 내용을 가져옴
+        const content = editorRef.current?.getInstance().getHTML();
+
         const postData = {
             title,
-            content, // HTML 형태로 저장된 에디터 내용
+            content, // HTML 형태로 저장(사용자가 작성한 폰트 스타일 저장됨)
             team,
             fundPeriod,
             businessPeriod,
             targetAmount,
         };
 
-        // 나중에 실제 API를 통해 서버에 보낼 수 있도록 준비
         console.log('작성된 글:', postData);
 
-        // 글이 작성된 후, 다른 페이지로 이동 (예: 메인 페이지)
-        navigate('/fund');
+        // navigate를 직접 호출하지 않고 useEffect에서 처리
+        setTimeout(() => {
+            navigate('/fund', { state: postData });
+        }, 0); // navigate 실행 시 약간의 지연을 추가
+
+        // navigate('/fund', { state: { postData } });
+        // 왜 이렇게 하면 무한 렌더링 오류가 나는지. 
+        // 그리고 해결책이 setTimeout이 맞는지 물어보깅
     };
 
     return (
@@ -84,26 +92,17 @@ const FundPost = () => {
                     required
                 />
 
-                {/* TinyMCE 에디터를 사용하여 글 작성 */}
+                {/* Toast UI 에디터를 사용하여 글 작성 */}
                 <div className="editor-container">
                     <Editor
-                        apiKey="ot6rc0m9nao5iwlvosd8tt8iaj0kym5gg82funidq6o7humx"
-                        value={content}
-                        init={{
-                            height: 300,
-                            menubar: true,
-                            plugins: [
-                                'advlist autolink lists link image charmap print preview anchor',
-                                'searchreplace visualblocks code fullscreen',
-                                'insertdatetime media table paste code help wordcount',
-                                'placeholder' // placeholder 플러그인 추가
-                            ],
-                            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                            placeholder: "내용을 입력하세요" // placeholder 내용 설정
-                        }}
-                        onEditorChange={(newContent) => setContent(newContent)}
+                        ref={editorRef}
+                        initialValue=""
+                        previewStyle="vertical"
+                        height="300px"
+                        initialEditType="wysiwyg"
+                        useCommandShortcut={true}
+                        placeholder="내용을 입력하세요"
                     />
-
                 </div>
 
                 <input
