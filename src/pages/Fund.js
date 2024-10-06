@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -100,12 +100,13 @@ const FundCard = ({ imageSrc, altText, title, date, link }) => {
 
 const Fund = () => {
   const location = useLocation();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]); // 새로 작성된 글들을 저장하는 배열
 
-  // location.state로 전달된 postData가 있으면 배열에 추가
-  if (location.state && location.state.postData) {
-    setPosts((prevPosts) => [...prevPosts, location.state.postData]);
-  }
+  useEffect(() => {
+    if (location.state && location.state.postData) {
+      setPosts((prevPosts) => [...prevPosts, location.state.postData]); // postData가 있을 때만 추가
+    }
+  }, [location.state]); // location.state가 변경될 때마다 실행
 
   return (
     <Main>
@@ -131,16 +132,14 @@ const Fund = () => {
         link="/fund-detail"
       />
 
+      {/* 새로 작성된 글들을 표시하는 카드들 */}
       {posts.map((post, index) => (
-        <Link to={`/fund-detail/${index}`} key={index}>
-          <div className="card">
-            <img src="../svg/store-card1.svg" className="card-img" alt="모금 이미지" />
-            <div className="card-body">
-              <p className="card-text">{post.title}</p>
-              <p className="card-date">{post.fundPeriod}</p>
-            </div>
+        <div className="card" key={index}>
+          <div className="card-body">
+            <p className="card-text">{post.title}</p>
+            <p className="card-date">{post.fundPeriod}</p>
           </div>
-        </Link>
+        </div>
       ))}
 
       <div className="write-button-container">
