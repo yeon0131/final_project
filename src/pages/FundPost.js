@@ -1,8 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import '@toast-ui/editor/dist/toastui-editor.css'; // 토스트 UI 에디터의 CSS
-import { Editor } from '@toast-ui/react-editor';
+import { Editor } from '@toast-ui/react-editor'; // 토스트 UI 에디터 셋팅
+import '@toast-ui/editor/dist/toastui-editor.css'; 
+
+import color from '@toast-ui/editor-plugin-color-syntax';
+import 'tui-color-picker/dist/tui-color-picker.css';
+import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 
 // Styled components
 const Main = styled.main`
@@ -61,6 +65,8 @@ const Main = styled.main`
 
     .toastui-editor-defaultUI {
       width: 100% !important; /* 에디터 UI 강제 100% */
+      min-width: 100% !important; /* 최소 너비 강제 설정 */
+      overflow-x: hidden;  /* 가로 스크롤 숨김 */
     }
 
   }
@@ -126,6 +132,8 @@ const FundPost = () => {
                         initialEditType="wysiwyg"
                         useCommandShortcut={true}
                         placeholder="내용을 입력하세요"
+                        plugins={[color]} //폰트 색상
+                        // hideModeSwitch={true} // html모드 없애기
                     />
                 </div>
 
