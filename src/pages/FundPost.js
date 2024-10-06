@@ -6,6 +6,12 @@ import { Editor } from '@toast-ui/react-editor';
 
 // Styled components
 const Main = styled.main`
+
+  width: 100%;  /* Main 태그의 전체 너비 설정 */
+  box-sizing: border-box; /* 전체적으로 박스 사이즈를 관리 */
+  padding: 0; /* Main 안의 여백 제거 */
+
+  
   .post-form {
     padding: 1.2rem;
   }
@@ -41,7 +47,25 @@ const Main = styled.main`
     border-top: 0.5rem solid #dfdfdf;
     margin: 0.4rem 0;
   }
+
+  /* 반응형 쿼리 */
+  //toast ui 기본값 때문에 560px이하로 너비가 줄지 않음. 
+  //이거 해결 어케함용.. !important줘도 안됨여
+  @media (max-width: 600px) {
+    
+    .post-form, .post-input, .editor-container, .submit-btn {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.5rem;
+    }
+
+    .toastui-editor-defaultUI {
+      width: 100% !important; /* 에디터 UI 강제 100% */
+    }
+
+  }
 `;
+
 
 const FundPost = () => {
     const navigate = useNavigate();
@@ -50,13 +74,13 @@ const FundPost = () => {
     const [fundPeriod, setFundPeriod] = useState('');
     const [businessPeriod, setBusinessPeriod] = useState('');
     const [targetAmount, setTargetAmount] = useState('');
-    const editorRef = useRef(); // 에디터의 참조를 만듭니다.
+    const editorRef = useRef();
 
     // 폼 제출 처리
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 에디터에서 작성된 내용을 가져옴
+        // 에디터에서 작성된 내용
         const content = editorRef.current?.getInstance().getHTML();
 
         const postData = {
