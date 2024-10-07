@@ -1,20 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Editor } from '@toast-ui/react-editor'; // 토스트 UI 에디터 셋팅
+import { Editor } from '@toast-ui/react-editor'; 
 import '@toast-ui/editor/dist/toastui-editor.css'; 
-
 import color from '@toast-ui/editor-plugin-color-syntax';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-// Styled components
 const Main = styled.main`
-
-  width: 100%;  /* Main 태그의 전체 너비 설정 */
-  box-sizing: border-box; /* 전체적으로 박스 사이즈를 관리 */
-  padding: 0; /* Main 안의 여백 제거 */
-
+  width: 100%;  
+  box-sizing: border-box; 
+  padding: 0; 
   
   .post-form {
     padding: 1.2rem;
@@ -47,16 +45,7 @@ const Main = styled.main`
     cursor: pointer;
   }
 
-  .separator {
-    border-top: 0.5rem solid #dfdfdf;
-    margin: 0.4rem 0;
-  }
-
-  /* 반응형 쿼리 */
-  //toast ui 기본값 때문에 560px이하로 너비가 줄지 않음. 
-  //이거 해결 어케함용.. !important줘도 안됨여
   @media (max-width: 600px) {
-    
     .post-form, .post-input, .editor-container, .submit-btn {
       width: 100%;
       box-sizing: border-box;
@@ -64,50 +53,47 @@ const Main = styled.main`
     }
 
     .toastui-editor-defaultUI {
-      width: 100% !important; /* 에디터 UI 강제 100% */
-      min-width: 100% !important; /* 최소 너비 강제 설정 */
-      overflow-x: hidden;  /* 가로 스크롤 숨김 */
+      width: 100% !important; 
+      min-width: 100% !important; 
+      overflow-x: hidden; 
     }
-
   }
 `;
-
 
 const FundPost = () => {
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [team, setTeam] = useState('');
-    const [fundPeriod, setFundPeriod] = useState('');
-    const [businessPeriod, setBusinessPeriod] = useState('');
+    const [fundStart, setFundStart] = useState(null);
+    const [fundEnd, setFundEnd] = useState(null);
+    const [businessStart, setBusinessStart] = useState(null);
+    const [businessEnd, setBusinessEnd] = useState(null);
     const [targetAmount, setTargetAmount] = useState('');
     const editorRef = useRef();
 
-    // 폼 제출 처리
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 에디터에서 작성된 내용
         const content = editorRef.current?.getInstance().getHTML();
 
         const postData = {
             title,
-            content, // HTML 형태로 저장(사용자가 작성한 폰트 스타일 저장됨)
+            content,
             team,
-            fundPeriod,
-            businessPeriod,
+            fundPeriod: `${fundStart?.toLocaleDateString()} - ${fundEnd?.toLocaleDateString()}`,
+            businessPeriod: `${businessStart?.toLocaleDateString()} - ${businessEnd?.toLocaleDateString()}`,
             targetAmount,
         };
 
         console.log('작성된 글:', postData);
 
-        // navigate를 직접 호출하지 않고 useEffect에서 처리
         setTimeout(() => {
             navigate('/fund', { state: postData });
-        }, 0); // navigate 실행 시 약간의 지연을 추가
-
-        // navigate('/fund', { state: { postData } });
-        // 왜 이렇게 하면 무한 렌더링 오류가 나는지. 
-        // 그리고 해결책이 setTimeout이 맞는지 물어보깅
+        }, 0);
     };
 
     return (
@@ -122,7 +108,6 @@ const FundPost = () => {
                     required
                 />
 
-                {/* Toast UI 에디터를 사용하여 글 작성 */}
                 <div className="editor-container">
                     <Editor
                         ref={editorRef}
@@ -132,8 +117,7 @@ const FundPost = () => {
                         initialEditType="wysiwyg"
                         useCommandShortcut={true}
                         placeholder="내용을 입력하세요"
-                        plugins={[color]} //폰트 색상
-                        // hideModeSwitch={true} // html모드 없애기
+                        plugins={[color]}
                     />
                 </div>
 
@@ -146,21 +130,39 @@ const FundPost = () => {
                     required
                 />
 
-                <input
-                    type="text"
-                    className="post-input"
-                    placeholder="모금 기간을 입력하세요 (예: 2024.07.26 - 2024.10.26)"
-                    value={fundPeriod}
-                    onChange={(e) => setFundPeriod(e.target.value)}
+                <label>모금 기간</label>
+                <label>시작일:</label>
+                <DatePicker 
+                    selected={fundStart} 
+                    onChange={(date) => setFundStart(date)} 
+                    className="post-input" 
+                    placeholderText="시작일 선택" 
+                    required
+                />
+                <label>종료일:</label>
+                <DatePicker 
+                    selected={fundEnd} 
+                    onChange={(date) => setFundEnd(date)} 
+                    className="post-input" 
+                    placeholderText="종료일 선택" 
                     required
                 />
 
-                <input
-                    type="text"
-                    className="post-input"
-                    placeholder="사업 기간을 입력하세요 (예: 2024.11.07 - 2024.11.28)"
-                    value={businessPeriod}
-                    onChange={(e) => setBusinessPeriod(e.target.value)}
+                <label>사업 기간</label>  
+                <label>시작일:</label>
+                <DatePicker 
+                    selected={businessStart} 
+                    onChange={(date) => setBusinessStart(date)} 
+                    className="post-input" 
+                    placeholderText="시작일 선택" 
+                    required
+                />
+                <label>종료일:</label>
+                <DatePicker 
+                    selected={businessEnd} 
+                    onChange={(date) => setBusinessEnd(date)} 
+                    className="post-input" 
+                    placeholderText="종료일 선택" 
                     required
                 />
 

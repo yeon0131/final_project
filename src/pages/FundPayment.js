@@ -55,6 +55,11 @@ const Main = styled.main`
       margin-right: 1rem;
       font-weight:600;
     }
+
+    input{
+      border: none;
+      font-size: 1rem;
+    }
   }
 
 
@@ -181,6 +186,8 @@ const FundPayment = () => {
     const navigate = useNavigate(); // useNavigate를 사용해 페이지 이동
   
     useEffect(() => {
+      window.scrollTo(0, 0);
+      
       const calculatedPercentage = (currentAmount / targetAmount) * 100;
       setPercentage(calculatedPercentage);
     }, [currentAmount, targetAmount]);

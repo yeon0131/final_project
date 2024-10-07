@@ -37,7 +37,7 @@ const Main = styled.main`
 
   .post-detail-title {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
   }
 
@@ -64,8 +64,8 @@ const Main = styled.main`
   
     .detail-info-description {
       color: #9e9e9e;
-      font-size: 0.8rem;
-      margin: 0.7rem 0 0.7rem 0.5rem;
+      font-size: 0.85rem;
+      margin: 0.7rem 0 4rem 0.7rem;
     }
   }
 
@@ -98,6 +98,8 @@ const FundDetail = () => {
     const navigate = useNavigate(); // useNavigate를 사용해 페이지 이동
   
     useEffect(() => {
+      window.scrollTo(0, 0);
+      
       const calculatedPercentage = (currentAmount / targetAmount) * 100;
       setPercentage(calculatedPercentage);
     }, [currentAmount, targetAmount]);

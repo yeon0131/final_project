@@ -52,16 +52,11 @@ const Container = styled.div`
     width: 100vw;
     max-width: 600px;
     flex-direction: column;
-
-    @media (min-width: 393px) {
-        padding: 20px 0;
-    }
 `;
 
 const Tabs = styled.div`
     display: flex;
     justify-content: center;
-    margin-top: 50px;
     position: relative;
 `;
 

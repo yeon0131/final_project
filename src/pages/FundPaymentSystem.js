@@ -14,13 +14,14 @@ const Main = styled.main`
         color: #fff;
         font-weight: 600;
         font-size: 1.2rem;
-        margin: 5rem 1rem 2rem 1rem;
+        margin: 1rem;
         cursor: pointer;
     }
 `;
 
 const PostBox = styled.div`
   padding: 1.2rem;
+  margin-bottom: 5rem;
 `;
 
 const PostImg = styled.img`
@@ -42,8 +43,7 @@ const ProgressContainer = styled.div`
   width: 100%;
   background-color: #ECECEC;
   border-radius: 25px;
-  height: 0.7rem;
-  margin-top: 1.5rem;
+  height: 0.7rem; 
   position: relative;
 `;
 
@@ -73,13 +73,15 @@ const TargetText = styled.p`
 const FundPaymentSystem = () => {
   const location = useLocation();
   const { totalAmount, name } = location.state || { totalAmount: 0, name: '익명' }; // state에서 totalAmount 받기, 없을 경우 기본값 0
-  
   const [percentage, setPercentage] = useState(0);
   const [targetAmount] = useState(1000000);
   const [currentAmount] = useState(400000);
   const [newPercentage, setNewPercentage] = useState(0);
 
   useEffect(() => {
+    // 페이지 로드 시 스크롤을 맨 위로 이동
+    window.scrollTo(0, 0);
+
     // 현재 달성 퍼센트 계산
     const calculatedPercentage = (currentAmount / targetAmount) * 100;
     setPercentage(calculatedPercentage);
@@ -88,27 +90,29 @@ const FundPaymentSystem = () => {
     const newCalculatedPercentage = ((currentAmount + totalAmount) / targetAmount) * 100;
     setNewPercentage(newCalculatedPercentage);
 
+    
   }, [currentAmount, targetAmount, totalAmount]);
-
+  
   //네이버페이가 제공한 JavaScript SDK를 리액트 컴포넌트에 통합
   useEffect(() => {
-      // 네이버페이 SDK 로드
-      const script = document.createElement('script');
-      script.src = "https://nsp.pay.naver.com/sdk/js/naverpay.min.js";
-      script.async = true;
-      document.body.appendChild(script);
 
-      script.onload = () => {
-        if (window.Naver && window.Naver.Pay) {
-          const oPay = window.Naver.Pay.create({
-            mode: "production", // development 또는 production
-            clientId: "u86j4ripEt8LRfPGzQ8", // 실제 클라이언트 ID로 변경
-          });
-
-          // 결제 버튼 클릭 이벤트 등록
-          const naverPayBtn = document.getElementById('naverPayBtn');
-          naverPayBtn.addEventListener('click', () => {
-            oPay.open({
+    // 네이버페이 SDK 로드
+    const script = document.createElement('script');
+    script.src = "https://nsp.pay.naver.com/sdk/js/naverpay.min.js";
+    script.async = true;
+    document.body.appendChild(script);
+    
+    script.onload = () => {
+      if (window.Naver && window.Naver.Pay) {
+        const oPay = window.Naver.Pay.create({
+          mode: "production", // development 또는 production
+          clientId: "u86j4ripEt8LRfPGzQ8", // 실제 클라이언트 ID로 변경
+        });
+        
+        // 결제 버튼 클릭 이벤트 등록
+        const naverPayBtn = document.getElementById('naverPayBtn');
+        naverPayBtn.addEventListener('click', () => {
+          oPay.open({
               merchantUserKey: "test-user-1234", // 테스트 사용자 식별 키
               merchantPayKey: "test-order-5678", // 테스트 주문 번호
               productName: "기부", // 상품 이름
@@ -120,7 +124,37 @@ const FundPaymentSystem = () => {
           });
         }
       };
-  }, [totalAmount]);
+
+      // 토스페이 SDK 로드
+      const scriptTossPay = document.createElement('script');
+      scriptTossPay.src = 'https://js.tosspayments.com/v1';
+      scriptTossPay.async = true;
+      document.body.appendChild(scriptTossPay);
+
+      scriptTossPay.onload = () => {
+        if (window.TossPayments) {
+          const tossPayments = window.TossPayments('test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'); // 테스트용 API 키
+          const tossPayBtn = document.getElementById('tossPayBtn');
+          const orderId = `order_${new Date().getTime()}`; // 고유한 주문 ID
+
+          tossPayBtn.addEventListener('click', () => {
+            try {
+              tossPayments.requestPayment('카드', {
+                amount: totalAmount,
+                orderId: orderId,
+                orderName: '기부',
+                customerName: name || '테스트 사용자',
+                successUrl: 'http://localhost:3000/fund-payment-success',
+                failUrl: 'http://localhost:3000/fund-payment-fail',
+              });
+            } catch (error) {
+              console.error("결제 요청 중 오류 발생:", error); 
+              alert('결제 요청에 문제가 있습니다. 콘솔 로그를 확인해 주세요.');
+            }
+          });
+        }
+      };
+  }, [totalAmount, name]);
 
   return (
     <Main>
@@ -128,6 +162,12 @@ const FundPaymentSystem = () => {
       <PostBox>
         <PostTitle>폭우가 덮친 밤, 호우피해 주민들의 악몽을 깨워주세요</PostTitle>
         <FundRecipient>사랑의열매 사회복지공동모금회</FundRecipient>
+        <img 
+          src={`${process.env.PUBLIC_URL}/images/하늘마음티콘.png`} 
+          className='imty'
+          alt="감사 이미지" 
+          style={{ width: '140px', margin: '1.5rem 0 0 0', display: 'block' }} 
+        />
 
         <ProgressContainer>
           <ProgressBar style={{ width: `${newPercentage}%` }} />
@@ -143,7 +183,13 @@ const FundPaymentSystem = () => {
         type="button" 
         id="naverPayBtn" 
         className="fund-btn" 
-        value={`${totalAmount.toLocaleString()}원 결제하기`}
+        value={`네이버페이로 ${totalAmount.toLocaleString()}원 결제하기`}
+      />
+      <input 
+        type="button" 
+        id="tossPayBtn" 
+        className="fund-btn" 
+        value={`토스페이로 ${totalAmount.toLocaleString()}원 결제하기`}
       />
     </Main>
   );

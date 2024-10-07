@@ -9,7 +9,7 @@ const Main = styled.main`
   }
 
   .card {
-    margin: 0.5rem;
+    margin: 2rem 1rem;
     border-radius: 0.6rem;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -18,17 +18,12 @@ const Main = styled.main`
 
   .card-img {
     width: 100%;
-    height: 200px; /* 카드 안에서 일정한 높이를 유지하도록 설정 */
+    height: 200px; 
     object-fit: cover; /* 이미지가 카드 영역을 꽉 채우게 */
   }
 
-  /* 첫 번째 카드에만 여백을 추가 */
-  .card:first-child {
-    margin-top: 2rem; /* 첫 번째 카드 상단에 추가 여백 */
-  }
-
   .card-body {
-    padding: 1.5rem;
+    padding: 0 1.5rem 0.7rem;
   }
 
   .card-text {
@@ -111,21 +106,21 @@ const Fund = () => {
   return (
     <Main>
       <FundCard
-        imageSrc="../svg/store-card1.svg"
+        imageSrc={`${process.env.PUBLIC_URL}/images/store-card1.png`}
         altText="호우피해 긴급모금 카드 이미지"
         title="호우피해 긴급모금"
         date="2024.6.16 ~ 2024.7.31"
         link="/fund-detail"
       />
       <FundCard
-        imageSrc="../svg/store-card2.svg"
+        imageSrc={`${process.env.PUBLIC_URL}/images/store-card2.png`}
         altText="산불피해 긴급모금 카드 이미지"
         title="산불피해 긴급모금"
         date="2024.7.01 ~ 2024.8.01"
         link="/fund-detail"
       />
       <FundCard
-        imageSrc="../svg/store-card3.svg"
+        imageSrc={`${process.env.PUBLIC_URL}/images/store-card3.png`}
         altText="산불피해 긴급모금 카드 이미지"
         title="전북 호우피해 구호키트 지원 캠페인"
         date="2024.7.16 ~ 2024.8.16"

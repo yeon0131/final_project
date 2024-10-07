@@ -13,14 +13,14 @@ const PostImg = styled.img`
 `;
 
 const PostTitle = styled.p`
+  font-weight: 600;
+  font-size: 1.2rem;
   margin-bottom: 0.3rem;
-  font-weight: 700;
 `;
 
 const FundRecipient = styled.p`
-  font-size: 0.73rem;
-  margin: 0.5rem 0 0 0;
-  font-weight: 400;
+  font-size: 0.8rem;
+  margin-bottom: 0;
 `;
 
 const ProgressContainer = styled.div`
@@ -40,19 +40,18 @@ const ProgressBar = styled.div`
 `;
 
 const ProgressText = styled.p`
-  font-size: 0.8rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: #FFCC00;
   margin: 0.22rem 0 0 0.3rem;
 `;
 
 const TargetText = styled.p`
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #333;
   float: right;
   margin-right: 0.3rem;
   margin-top: -0.8rem;
-  letter-spacing: 0.3px;
 `;
 
 // DonationDetails component
