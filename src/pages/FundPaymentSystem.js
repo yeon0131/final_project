@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
-import styled from 'styled-components'; 
+import styled, { keyframes } from 'styled-components'; 
 import fundPostImg from '../DMHM-images/fund-post-img.png'; 
 
 // Styled components
@@ -37,6 +37,26 @@ const PostTitle = styled.p`
 const FundRecipient = styled.p`
   font-size: 0.7rem;
   margin: 0.5rem 0 0 0;
+`;
+
+// 이미지 애니메이션 정의
+const sway = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+`;
+
+const FlyImage = styled.img`
+  width: 140px;
+  margin: 1.5rem 0 0 0;
+  display: block;
+  animation: ${sway} 2s ease-in-out infinite;  // 천천히 흔들리는 애니메이션 효과
 `;
 
 const ProgressContainer = styled.div`
@@ -145,7 +165,7 @@ const FundPaymentSystem = () => {
                 orderName: '기부',
                 customerName: name || '테스트 사용자',
                 successUrl: 'http://localhost:3000/fund-payment-success',
-                failUrl: 'http://localhost:3000/fund-payment-fail',
+                failUrl: 'http://localhost:3000/fund-payment',
               });
             } catch (error) {
               console.error("결제 요청 중 오류 발생:", error); 
@@ -162,11 +182,9 @@ const FundPaymentSystem = () => {
       <PostBox>
         <PostTitle>폭우가 덮친 밤, 호우피해 주민들의 악몽을 깨워주세요</PostTitle>
         <FundRecipient>사랑의열매 사회복지공동모금회</FundRecipient>
-        <img 
+        <FlyImage 
           src={`${process.env.PUBLIC_URL}/images/하늘마음티콘.png`} 
-          className='imty'
           alt="감사 이미지" 
-          style={{ width: '140px', margin: '1.5rem 0 0 0', display: 'block' }} 
         />
 
         <ProgressContainer>
