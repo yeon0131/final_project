@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import BottomNav from '../components/BottomNav';
 import { useNavigate } from 'react-router-dom';
@@ -65,6 +65,10 @@ const MenuList = () => {
       navigate('/DMHMDefinition'); // 페이지 이동
     } else if (page === 'ch2') {
       navigate('/DMHMDefinition2'); // 페이지 이동
+    } else if (page === 'ch3') {
+      navigate('/DMHMDefinition3'); // 페이지 이동
+    } else if (page === 'ch4') {
+      navigate('/DMHMDefinition4'); // 페이지 이동
     }
   };
 
@@ -85,6 +89,12 @@ const MenuList = () => {
 
 // 전체 페이지 컴포넌트
 const DisasterMentalHealthManual = () => {
+
+    // 페이지 이동 시 스크롤을 맨 위로
+    useEffect(() => {
+      window.scrollTo(0, 0); // 페이지가 로드될 때 스크롤을 맨 위로 이동
+    }, []);
+
   return (
     <AppContainer>
       {/* <Header /> */}

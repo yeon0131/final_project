@@ -1,21 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import BottomNav from '../components/BottomNav'; // 공용 Footer 컴포넌트
+
+const AppContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  position: relative;
+  // margin-top: 70px;
+  box-sizing: border-box;
+`;
 
 // Styled-components
 const Content = styled.div`
   flex: 1;
   padding: 0rem 1rem;
+  padding-bottom: 100px;
   position: relative;
   z-index: 1;
   overflow-y: auto;
   background-color: white;
   width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 `;
 
 const ButtonBox = styled.div`
   margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const DropdownButton = styled.button`
@@ -31,6 +47,7 @@ const DropdownButton = styled.button`
   text-align: center;
   font-weight: bolder;
   position: relative;
+  width: 100%;
 
   &::after {
     content: '${(props) => (props.isOpen ? '▲' : '▼')}';
@@ -45,7 +62,7 @@ const ImgBox = styled.div`
   margin-top: 50px;
 
   img {
-    width: 70%;
+    width: 100%;
     max-width: 600px;
     height: auto;
   }
@@ -68,7 +85,7 @@ const GrayBox = styled.div`
   background-color: #F3F3F3;
   text-align: center;
   margin-top: 10px;
-  padding: 10px;
+  padding: 20px;
   position: relative;
   word-break: keep-all;
 
@@ -88,15 +105,73 @@ const GrayBox = styled.div`
     }`}
 `;
 
-const DMHM_Definition = () => {
+const TopButton = styled.button`
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  color: #FFD651;
+  border: 2px solid #FFD651;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  display: ${({ show }) => (show ? 'block' : 'none')};
+  z-index: 100;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  bottom: 50px; 
+  right: 20px; 
+
+
+  &:hover {
+    background-color: #FFD651;
+    color: white;
+  }
+`;
+
+
+const DMHMDefinition = () => {
   const [selectedChapter, setSelectedChapter] = useState(null);
+  const [showTopButton, setShowTopButton] = useState(false);
 
   const toggleChapter = (chapter) => {
     setSelectedChapter(selectedChapter === chapter ? null : chapter);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 스크롤을 페이지 상단으로 이동
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
   };
+
+    // 페이지 로드 시 스크롤을 맨 위로 이동
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
+    // TOP버튼
+    useEffect(() => {
+      const handleScroll = () => {
+        if (window.scrollY > 100) {
+          setShowTopButton(true);
+        } else {
+          setShowTopButton(false);
+        }
+      };
+  
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+
+  // 맨 위로 가는 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
 
   return (
     <>
+    <AppContainer>
       <Content>
         <ButtonBox>
           <DropdownButton
@@ -123,14 +198,14 @@ const DMHM_Definition = () => {
               </GrayBox>
               <br /><br />
 
-              <ImgBox><img src="/DHMH-images/혼란형.png" alt="혼란형" /></ImgBox>
+              <ImgBox><img src="/DMHM-images/혼란형.png" alt="혼란형" /></ImgBox>
               <GrayBox>
                 <b>혼란형</b><br /><br />
                 강한 불안으로 진정하기 어렵고, 말투나 행동에 일관성이 없습니다.
               </GrayBox>
               <br /><br />
 
-              <ImgBox><img src="/DHMH-images/망연자실형.png" alt="망연자실형" /></ImgBox>
+              <ImgBox><img src="/DMHM-images/망연자실형.png" alt="망연자실형" /></ImgBox>
               <GrayBox>
                 <b>망연자실형</b><br /><br />
                 겉보기에는 사고나 감정이 마비 또는 정지한 것처럼 보이는 상태입니다.
@@ -161,7 +236,7 @@ const DMHM_Definition = () => {
               <GrayBox>
                 <b>재난의 목격</b><br /><br />
                 시체, 화염, 가옥의 붕괴, 사람들의 혼란 등을 목격
-              </GrayBox>
+              </GrayBox><br/><br/>
             </>
           )}
 
@@ -227,10 +302,15 @@ const DMHM_Definition = () => {
             </>
           )}
         </ButtonBox>
+        <TopButton show={showTopButton} onClick={scrollToTop}>
+          TOP
+        </TopButton>
       </Content>
       <BottomNav />
+    </AppContainer>
     </>
   );
 };
 
-export default DMHM_Definition;
+
+export default DMHMDefinition;
