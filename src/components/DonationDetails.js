@@ -16,6 +16,10 @@ const PostTitle = styled.p`
   font-weight: 600;
   font-size: 1.3rem;
   margin-bottom: 0.3rem;
+
+  @media (max-width: 600px) {
+    font-size: 1.15rem;
+  }
 `;
 
 const FundRecipient = styled.p`
@@ -44,6 +48,10 @@ const ProgressText = styled.p`
   font-weight: 600;
   color: #FFCC00;
   margin: 0.4rem 0 0 0.3rem;
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+  }
 `;
 
 const TargetText = styled.p`
