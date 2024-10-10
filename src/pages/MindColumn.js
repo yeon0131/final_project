@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const Cards = styled.div`
     display: grid;
@@ -49,14 +53,12 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-    background: white;
     padding: 1rem;
     border-radius: 10px;
-    width: 50vw;
-    height: 50vh;
+    width: 100vw;
+    height: 100vh;
     position: relative;
-    max-width: 50rem;
-    max-height: 50rem;
+    max-width: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,11 +86,47 @@ const NavButton = styled.button`
     top: 50%;
     transform: translateY(-50%);
     font-size: 2rem;
-    background: none;
+    background-color: white;
     border: none;
     color: #333;
     cursor: pointer;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
     ${(props) => (props.right ? 'right: 1rem;' : 'left: 1rem;')}
+
+    // &:hover {
+    //     transform: scale(1.1);
+    // }
+`;
+
+const CloseButton = styled.button`
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 1.5rem;
+    background-color: white;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
 `;
 
 const PageNumber = styled.div`
@@ -101,107 +139,53 @@ const PageNumber = styled.div`
 `;
 
 export const MindColumn = () => {
-    const [isModalOpen, setModalOpen] = useState(false);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
+    const location = useLocation();
+    const selectedImageList = location.state?.selectedImageList || 'sleepless_night'; 
+
+    const imageLists = {
+        sleepless_night: Array.from({ length: 10 }, (_, i) => `${process.env.PUBLIC_URL}/MC_images/sleepless_night(${i}).png`),
+        ptsd: Array.from({ length: 8 }, (_, i) => `${process.env.PUBLIC_URL}/MC_images/ptsd(${i}).png`),
+        panic_disorder: Array.from({ length: 10 }, (_, i) => `${process.env.PUBLIC_URL}/MC_images/panic_disorder(${i}).png`),
+        social_psychology: Array.from({ length: 9 }, (_, i) => `${process.env.PUBLIC_URL}/MC_images/social_psychology(${i}).png`),
+    };
+
+    const images = imageLists[selectedImageList];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isModalOpen, setModalOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
 
-    // 각 카드별 이미지 리스트 정의
-    const imageList1 = [
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night.png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(1).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(2).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(3).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(4).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(5).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(6).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(7).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(8).png`,
-        `${process.env.PUBLIC_URL}/MC_images/sleepless_night(9).png`
-    ];
-
-    const imageList2 = [
-        `${process.env.PUBLIC_URL}/MC_images/ptsd.png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(1).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(2).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(3).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(4).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(5).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(6).png`,
-        `${process.env.PUBLIC_URL}/MC_images/ptsd(7).png`
-    ];
-
-    const imageList3 = [
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder.png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(1).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(2).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(3).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(4).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(5).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(6).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(7).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(8).png`,
-        `${process.env.PUBLIC_URL}/MC_images/panic_disorder(9).png`
-    ];
-
-    const imageList4 = [
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology.png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(1).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(2).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(3).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(4).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(5).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(6).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(7).png`,
-        `${process.env.PUBLIC_URL}/MC_images/social_psychology(8).png`
-    ];
-
-    const openModal = (images) => {
-        setSelectedImages(images);
+    const openModal = (selectedImages) => {
+        setSelectedImages(selectedImages);
         setCurrentImageIndex(0);
         setModalOpen(true);
     };
-
-    const closeModal = () => {
-        setModalOpen(false);
-    };
-
-    const showNextImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedImages.length);
-    };
-
-    const showPrevImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedImages.length) % selectedImages.length);
-    };
+    const closeModal = () => setModalOpen(false);
+    const showNextImage = () => setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedImages.length);
+    const showPrevImage = () => setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedImages.length) % selectedImages.length);
 
     return (
         <>
             <Cards>
-                <Card onClick={() => openModal(imageList1)}>
-                    <img src={imageList1[0]} alt="이미지 1" />
-                </Card>
-                <Card onClick={() => openModal(imageList2)}>
-                    <img src={imageList2[0]} alt="이미지 2" />
-                </Card>
-                <Card onClick={() => openModal(imageList3)}>
-                    <img src={imageList3[0]} alt="이미지 3" />
-                </Card>
-                <Card onClick={() => openModal(imageList4)}>
-                    <img src={imageList4[0]} alt="이미지 4" />
-                </Card>
+                {Object.keys(imageLists).map((key, index) => (
+                    <Card key={index} onClick={() => openModal(imageLists[key])}>
+                        <img src={imageLists[key][0]} alt={`이미지 ${index + 1}`} />
+                    </Card>
+                ))}
             </Cards>
 
             <ModalOverlay visible={isModalOpen}>
                 <ModalContent>
-                    <button className="close-button" onClick={closeModal}>×</button>
+                    <CloseButton onClick={closeModal}><ClearIcon fontSize="large" /></CloseButton>
                     <img src={selectedImages[currentImageIndex]} alt="모달 이미지" />
-                    {currentImageIndex > 0 && <NavButton onClick={showPrevImage}>{"<"}</NavButton>}
-                    {currentImageIndex < selectedImages.length - 1 && (
-                        <NavButton right onClick={showNextImage}>{">"}</NavButton>
-                    )}
+                    {currentImageIndex > 0 && <NavButton onClick={showPrevImage}><NavigateBeforeIcon fontSize="large" /></NavButton>}
+                    {currentImageIndex < selectedImages.length - 1 && <NavButton right onClick={showNextImage}><NavigateNextIcon fontSize="large" /></NavButton>}
                     <PageNumber>{`${currentImageIndex + 1} / ${selectedImages.length}`}</PageNumber>
                 </ModalContent>
             </ModalOverlay>
-
         </>
     );
 };
