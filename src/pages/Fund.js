@@ -151,6 +151,8 @@ const Fund = () => {
   const [posts, setPosts] = useState([]); // 새로 작성된 글들을 저장하는 배열
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    
     if (location.state && location.state.postData) {
       setPosts((prevPosts) => [...prevPosts, location.state.postData]); // postData가 있을 때만 추가
     }
