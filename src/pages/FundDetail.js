@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import DonationDetails from '../components/DonationDetails';
 import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-// Styled components
 const Main = styled.main`
   position: relative;
 
@@ -35,6 +37,7 @@ const Main = styled.main`
 
   .post-detail {
     padding: 1.2rem;
+    position: relative; /* To position kebab icon inside this element */
   }
 
   .post-detail-title {
@@ -82,6 +85,21 @@ const Main = styled.main`
     color: #FFCC00;
   }
 
+  .kebab-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1001;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .kebab-icon:hover {
+    transform: scale(1.1);
+    color: #FFCC00;
+  }
+
   .copy-message {
     position: fixed;
     top: 50%;
@@ -95,24 +113,30 @@ const Main = styled.main`
     opacity: 0.9;
     z-index: 1000;
   }
+`;
 
-  @media (max-width: 600px) {
-    .post-img {
-      width: 100%;
-      height: auto;
-    }
-  }
+const MenuContainer = styled.div`
+  position: absolute;
+  top: 3rem; /* Positioned below the kebab icon */
+  left: 1rem;
+  width: 120px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 10px;
+`;
 
-  @media (min-width: 601px) {
-    body {
-      max-width: 600px;
-      margin: 0 auto;
-    }
+const MenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  cursor: pointer;
 
-    .post-img {
-      width: 100%;
-      height: auto;
-    }
+  &:hover {
+    background-color: #f0f0f0;
   }
 `;
 
@@ -121,6 +145,7 @@ const FundDetail = () => {
   const [targetAmount] = useState(1000000);
   const [currentAmount] = useState(400000);
   const [copyMessage, setCopyMessage] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false); // 메뉴 보이기 상태 추가
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -142,14 +167,35 @@ const FundDetail = () => {
       });
   };
 
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
   return (
     <Main>
       <ShareIcon className="share-icon" onClick={handleShareClick} />
-      
+      <MoreVertIcon className="kebab-icon" onClick={toggleMenu} />
+        {menuVisible && (
+          <MenuContainer>
+            <MenuItem>
+              <EditIcon />
+              <span>Edit</span>
+            </MenuItem>
+            {/* <MenuItem onClick={handleShareClick}>
+              <ShareIcon />
+              <span>Share</span>
+            </MenuItem> */}
+            <MenuItem>
+              <DeleteIcon />
+              <span>Delete</span>
+            </MenuItem>
+          </MenuContainer>
+        )}
+
       {copyMessage && <div className="copy-message">{copyMessage}</div>}
-      
+
       <DonationDetails percentage={percentage} targetAmount={targetAmount} />
-      
+
       <button className="fund-btn" onClick={() => navigate('/fund-payment')}>
         기부하기
       </button>
@@ -174,7 +220,7 @@ const FundDetail = () => {
           또한 축구장 1만 5000개의 넓이(경작지 10,756ha)의 농작물이 침수되고, 가축 76만 마리(축사 12만6천 제곱미터)도 폐사했다고 합니다.
         </p>
       </div>
-  
+
       <div className="separator"></div>
   
       <div className='detail-info-box'>
@@ -193,7 +239,7 @@ const FundDetail = () => {
           <span>2024.11.07 - 2024.11.28</span>
         </div>
         <div className="detail-content">
-          <span>영수증 발급기간</span>
+          <span>영수증 발급기관</span>
           <span>한국사회복지관협회</span>
         </div>
         <div className="separator-thin"></div>
